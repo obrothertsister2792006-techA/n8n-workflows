@@ -1,0 +1,143 @@
+{
+  "name": "salta3 burger",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "faded2fb-c36c-4240-a0fd-2473be81797e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ZSQ3sICYEMKlHjG1ITM-xe3MBuz23rmTbytLX6oJNWU",
+          "mode": "list",
+          "cachedResultName": "new shafiq's tasks",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZSQ3sICYEMKlHjG1ITM-xe3MBuz23rmTbytLX6oJNWU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZSQ3sICYEMKlHjG1ITM-xe3MBuz23rmTbytLX6oJNWU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        176,
+        0
+      ],
+      "id": "8a7c41cb-681b-4884-b153-8e092a5100be",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o4Z5D1EB3tE54HCs",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const tasks = [];\n\nfor (const item of $input.all()) {\n  tasks.push(item.json.task);\n}\n\nconst tasksText = tasks.join('\\n');\n\nreturn [{ json: { tasksText } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        0
+      ],
+      "id": "8d408753-945d-452c-aa4d-6f3f55bee0fd",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "test33n8n@gmail.com",
+        "subject": "Today's Tasks",
+        "emailType": "text",
+        "message": "=These are your tasks: \n{{ $json.tasksText }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        528,
+        0
+      ],
+      "id": "bf6f327b-ca67-4005-9aab-fabb35f4d947",
+      "name": "Send a message",
+      "webhookId": "2414092b-ba7b-470e-b144-996e60f62eaa",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tk0hWQtk04TLGoFW",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "80747d17-c497-4faf-a247-42185449b88b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8c3c151ed5314f77bcf476921d098a635e01d6daae49aaf6aa15b17b32ec853"
+  },
+  "nodeGroups": [],
+  "id": "Wtm1MsWn5DD4zOW9",
+  "tags": []
+}

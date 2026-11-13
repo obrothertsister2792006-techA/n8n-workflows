@@ -1,0 +1,87 @@
+{
+  "name": "First project",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Order",
+        "formDescription": "We are happy to serve you!",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name"
+            },
+            {
+              "fieldLabel": "Age"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "34a34130-86e6-4459-bbad-c7cdec5cdf36",
+      "name": "On form submission",
+      "webhookId": "fb39c182-bb6c-4eef-bf4c-1406a1a681ea"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eca34e5f-b57e-4b07-b976-0b37c37335af",
+              "name": "Name",
+              "value": "=Your name is: {{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "9efb141d-3e47-46cf-bfbb-115ad33393a9",
+              "name": "Age",
+              "value": "=Your age is: {{ $json.Age }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "2e5615b3-deb5-401d-a9cf-b4ee3ddf6d37",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0f03920b-e3e2-4e71-b789-b3cd13bc5f8b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8c3c151ed5314f77bcf476921d098a635e01d6daae49aaf6aa15b17b32ec853"
+  },
+  "nodeGroups": [],
+  "id": "ZZBPPNGkkTkf0BtF",
+  "tags": []
+}

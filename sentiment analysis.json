@@ -1,0 +1,309 @@
+{
+  "name": "sentiment analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Feedback",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "feedback",
+              "placeholder": "Put your feedback here...."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dcba40c7-8daf-46dc-9772-88a7871c1413",
+      "name": "On form submission",
+      "webhookId": "ab4503b4-1426-4144-a11c-104f62bab0c6"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.feedback }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are highly intelligent and accurate sentiment analyzer. Analyze the sentiment of the provided text. Categorize it into one of the following: {Positive, Negative}. Use the provided formatting instructions."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5dbd0504-66f9-42ee-afbe-6a0d569d4dac",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-chat",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        224,
+        160
+      ],
+      "id": "e7c788bd-c5a0-4673-85cf-af2d5cd204e5",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "h7oLTRiKDb0baLY4",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"client_status\":{\n          \"type\":\"string\",\n          \"description\":\"Positive if the feedback is positive and negative if feedback is negative\"\n        }\n\t}\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        160
+      ],
+      "id": "6e722e82-afdd-43f1-9f19-d91475c52c01",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.client_status }}",
+                    "rightValue": "Positive",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8127fe5d-d73b-498a-b19f-cee8d32ecf27"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Positive"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "dfa9c4f6-5305-4ca1-a95d-f66aa64b3dd3",
+                    "leftValue": "={{ $json.output.client_status }}",
+                    "rightValue": "Negative",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Negative"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        592,
+        0
+      ],
+      "id": "e78a714c-b184-4308-8cbe-3854c11ea80d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "chatId": "942355915",
+        "text": "We Are very happy that you like our food",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        -96
+      ],
+      "id": "0c726954-6cf1-4973-8247-62b303552a2f",
+      "name": "Send a text message",
+      "webhookId": "ebb04b2d-85c6-4813-ac32-816eefcd3874",
+      "credentials": {
+        "telegramApi": {
+          "id": "lgPJaRK6DXr4OSHM",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "942355915",
+        "text": "We Are very sorry.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        112
+      ],
+      "id": "b2aef751-1b42-40fd-a8f6-c09c8852adba",
+      "name": "Send a text message1",
+      "webhookId": "ceb1f828-0a44-4788-bddf-a0d47d4b2a1d",
+      "credentials": {
+        "telegramApi": {
+          "id": "lgPJaRK6DXr4OSHM",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "942355915",
+        "text": "=Be careful:\nBecause the client gave this feedback:  {{ $('On form submission').item.json.feedback }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        112
+      ],
+      "id": "6fe388f7-be31-4c0b-a6eb-b24839b27ded",
+      "name": "Send a text message2",
+      "webhookId": "4f5ba8dd-dfbf-4ffa-ae75-f29b8c71f947",
+      "credentials": {
+        "telegramApi": {
+          "id": "kJ43j7qPuTdmXDk9",
+          "name": "Telegram account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f86d623b-f801-4862-91bd-74e235ba470c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8c3c151ed5314f77bcf476921d098a635e01d6daae49aaf6aa15b17b32ec853"
+  },
+  "nodeGroups": [],
+  "id": "g1jWPhsn4jl3rpWS",
+  "tags": []
+}

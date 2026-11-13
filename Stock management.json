@@ -1,0 +1,266 @@
+{
+  "name": "Stock management",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        32,
+        0
+      ],
+      "id": "9265f4f6-d633-43fc-a98f-3b79a1e65c0e",
+      "name": "Telegram Trigger",
+      "webhookId": "7aa2e46f-88b8-4d42-8c67-fa6464f5fe9a",
+      "credentials": {
+        "telegramApi": {
+          "id": "ekBk9v7ukVYaJHGw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "15xwSIb8auUQPHOFHlaqeiB_8g92dk53gVCAKhmMSN54",
+          "mode": "list",
+          "cachedResultName": "Restaurant Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15xwSIb8auUQPHOFHlaqeiB_8g92dk53gVCAKhmMSN54/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15xwSIb8auUQPHOFHlaqeiB_8g92dk53gVCAKhmMSN54/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Count": "={{ $json.Count + $('Code in JavaScript').item.json.Item_quantity }}",
+            "Element ": "={{ $json['Element '] }}"
+          },
+          "matchingColumns": [
+            "Element "
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Element ",
+              "displayName": "Element ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Count",
+              "displayName": "Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Unit",
+              "displayName": "Unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        0
+      ],
+      "id": "18f3ca7e-62bc-4d55-8a0d-0147ce2d137a",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o4Z5D1EB3tE54HCs",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const order = $input.item.json.message.text.split(\" \")\n$input.item.json[\"Item_name\"] = order[0].charAt(0).toUpperCase() + order[0].slice(1)\n$input.item.json[\"Item_quantity\"] = parseInt(order[1])\nreturn $input.item"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d3ab386a-a21a-4354-a57a-6fe0ce7db55b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "15xwSIb8auUQPHOFHlaqeiB_8g92dk53gVCAKhmMSN54",
+          "mode": "list",
+          "cachedResultName": "Restaurant Stock",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15xwSIb8auUQPHOFHlaqeiB_8g92dk53gVCAKhmMSN54/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15xwSIb8auUQPHOFHlaqeiB_8g92dk53gVCAKhmMSN54/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Element ",
+              "lookupValue": "={{ $json.Item_name }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        0
+      ],
+      "id": "7e613028-8814-4d15-bd0e-68e832964b4b",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o4Z5D1EB3tE54HCs",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "942355915",
+        "text": "=كدا يا ريس كله : {{ $('Get row(s) in sheet').item.json.Count + $('Code in JavaScript').item.json.Item_quantity }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "c6d90e09-721f-4954-97c3-8ddf9aec493a",
+      "name": "Send a text message",
+      "webhookId": "72346fd5-6bab-4025-a3da-f2f4ebb42377",
+      "credentials": {
+        "telegramApi": {
+          "id": "ekBk9v7ukVYaJHGw",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "163cef02-68c9-49f3-a8a7-be21f1b4e6b0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8c3c151ed5314f77bcf476921d098a635e01d6daae49aaf6aa15b17b32ec853"
+  },
+  "nodeGroups": [],
+  "id": "xiB4gRjVdoxoAASx",
+  "tags": []
+}

@@ -1,0 +1,335 @@
+{
+  "name": "On-site Order managment",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Orders",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name"
+            },
+            {
+              "fieldLabel": "Phone",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Order",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Burger with cheese "
+                  },
+                  {
+                    "option": "Burger "
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -192,
+        32
+      ],
+      "id": "5724c6fa-4c89-4ad3-bbaa-dc22ea833a0a",
+      "name": "On form submission",
+      "webhookId": "76a15aff-923e-4d20-8c63-e6dbd1129371"
+    },
+    {
+      "parameters": {
+        "chatId": "942355915",
+        "text": "=Hi spong:\nWe have a new order\nItems: {{ $('On form submission').item.json.Order }}\nFrom: {{ $('On form submission').item.json.Name }}\nOrder number: {{ $json.Last_order }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        112
+      ],
+      "id": "c29f0ec9-c60c-413b-8766-953e518c5bb4",
+      "name": "Restaurant Orders",
+      "webhookId": "582cd514-a638-4a6a-a53c-629cca3df477",
+      "credentials": {
+        "telegramApi": {
+          "id": "kJ43j7qPuTdmXDk9",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE",
+          "mode": "list",
+          "cachedResultName": "Restaurant Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "For": "={{ $('On form submission').item.json.Name }}",
+            "Order ": "={{ $('On form submission').item.json.Order }}",
+            "Date": "={{ $('On form submission').item.json.submittedAt }}",
+            "Phone": "={{ $('On form submission').item.json.Phone }}",
+            "Status": "In kitchen",
+            "ID": "={{ $json.Last_order }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "For",
+              "displayName": "For",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Order ",
+              "displayName": "Order ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -64
+      ],
+      "id": "ae0311bd-cca2-4d9d-864e-faaaa3f1ffb5",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o4Z5D1EB3tE54HCs",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE",
+          "mode": "list",
+          "cachedResultName": "Restaurant Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 119126997,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE/edit#gid=119126997"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        32,
+        32
+      ],
+      "id": "1d2fb720-b361-4d71-9a10-d0ab2a457e0a",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o4Z5D1EB3tE54HCs",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE",
+          "mode": "list",
+          "cachedResultName": "Restaurant Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 119126997,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tvnp7et3xQDiHY7vCD4y30rFHEwOJBg1zF478ZqGTZE/edit#gid=119126997"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Last_order": "={{ $('Get row(s) in sheet').item.json.Last_order +1}}",
+            "row_number": 2
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Last_order",
+              "displayName": "Last_order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        -64
+      ],
+      "id": "d181c451-5488-4ca9-8d9f-bc9be2e08419",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o4Z5D1EB3tE54HCs",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Restaurant Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "277a8e38-f75b-4de6-93a2-b30deb6a0506",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8c3c151ed5314f77bcf476921d098a635e01d6daae49aaf6aa15b17b32ec853"
+  },
+  "nodeGroups": [],
+  "id": "XO2hL9pooJIarDDp",
+  "tags": []
+}
